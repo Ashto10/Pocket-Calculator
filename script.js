@@ -1,13 +1,19 @@
-var currentEntry = '0';     // Stores the currently displayed value
-var previousEntry = '0';    // Stores the previous value, prior to calculating
-var log = "";               // Stores all operations done
-var inOperation = false;    // Helper value to check if operation key was pressed
+'use strict';
 
-/// <summary> Adds pressed key to currentEntry, and handles edge cases with zeros and decimals. </summary>
-$(".number-button").click(function() {
-  var num = $(this).html();
+var currentEntry = '0';     /** Stores the currently displayed value */
+var previousEntry = '0';    /** Stores the previous value, prior to calculating */
+var log = "";               /** Stores all operations done */
+var inOperation = false;    /** Helper value to check if operation key was pressed */
 
+/**
+* Adds pressed key to currentEntry, and handles edge cases with zeros and decimals.
+* 
+* @param {jQuery} el - Element that's calling the function.
+*/
+function enterDigit(el) {
   inOperation = false;
+  var num = el.html()[0];
+
   if (currentEntry === '0' && num !== ".") {
     currentEntry = num;
   } else if (num === "." && currentEntry.includes(".")) {
@@ -16,10 +22,35 @@ $(".number-button").click(function() {
     currentEntry += num;
   }    
   updateDisplay(currentEntry);
-});
+}
 
-/// <summary> Adds current entry and pressed operation key to log for later calculation. </summary>
-function operation(op) {
+/**
+* Adds current entry and pressed operation key to log for later calculation.
+* 
+* @param {jQuery} el - Element that's calling the function.
+*/
+function operation(el) {
+  var op = "";
+
+  switch(el.attr('id')) {
+    case 'add':
+      op = "+";
+      break;
+    case 'subtract':
+      op = "-";
+      break;
+    case 'multiply':
+      op = "*";
+      break;
+    case 'divide':
+      op = "/";
+      break;
+    case 'equals':
+      return equals();
+    default:
+      return;
+                      }
+
   if (inOperation) {
     if (previousEntry == '0') {
       return;
@@ -35,7 +66,9 @@ function operation(op) {
   currentEntry = '0';
 }
 
-/// <summary> Calculates entries stored in log. </summary>
+/**
+* Calculates entries stored in log.
+*/
 function equals () {
   if (inOperation) {
     return;
@@ -50,23 +83,25 @@ function equals () {
   log = "";
 }
 
-/// <summary> Clear currentEntry </summary>
-function clearEntry() {
+/**
+* Clears display and entered values, depending on which button is pressed.
+* 
+* @param {jQuery} el - Element that's calling the function.
+*/
+function clear(el) {
   inOperation = false;
   currentEntry = '0';
+
+  if(el.attr('id') === "clearAll") {
+    previousEntry = '0';
+    log = "";
+  }
   updateDisplay(currentEntry);
 }
 
-/// <summary> Clear everything </summary>
-function clearAll() {
-  inOperation = false;
-  currentEntry = '0';
-  previousEntry = '0';
-  log = "";
-  updateDisplay(currentEntry);
-}
-
-/// <summary> Helper function that updates display. </summary>
+/**
+* Helper function that updates display.
+*/
 function updateDisplay(output) {
   document.getElementById('output').innerHTML = output;
   document.getElementById('log').innerHTML = log;
@@ -80,7 +115,9 @@ function updateDisplay(output) {
   }
 }
 
-/// <summary> Helper function that updates display with error message. </summary>
+/**
+* Helper function used for displaying and handling errors.
+*/
 function throwError (message) {
   log = message;
   updateDisplay("error");
@@ -90,39 +127,62 @@ function throwError (message) {
   log = '';
 }
 
-/// <summary> Easter egg function: Fades screen if solar panels are covered. </summary>
+/**
+* Easter egg: Fades display if mouse is covering solar panels.
+*/
 $(".solar").mouseenter(function(){
   $("#output, #log").addClass("covered");
 });
 
-/// <summary> Easter egg function: Restores screen once solar panels are uncovered. </summary>
+/**
+* Easter egg: Restores display once mouse is no longer covering solar panels.
+*/
 $(".solar").mouseleave(function() {
   $("#output, #log").removeClass("covered");
 });
 
 var pressingOnScreen = false; // Helper function used to see if button is being pressed
 
-/// <summary> Easter egg function: Kicks off screen pressed event. </summary>
+/**
+* Easter egg: Starts "screen pressed" animation when display is clicked.
+*/
 function ScreenPressed(event) {
   pressingOnScreen = true;
-  var xPos = event.pageX - $(".screen-border").offset().left;
-  var yPos = event.pageY - $(".screen-border").offset().top;
+  var xPos = event.pageX - $(".screen").offset().left;
+  var yPos = event.pageY - $(".screen").offset().top;
   var random = Math.random() * 15;
-  var command = "radial-gradient(70px at " + xPos + "px "+yPos+"px, #262220 "+random+"%, #3b423f "+ (20 + random) +"%, #3d372c "+ (40 + random) +"%, #514844 "+ (60 + random) +"%, #605c53 80%)";
-  $(".screen-border").css({"background": command,"cursor":"pointer"});
+  var command = "radial-gradient(farthest-corner at " + xPos + "px "+yPos+"px, #262220 "+random+"%, #3b423f "+ (20 + random) +"%, #3d372c "+ (40 + random) +"%, #514844 "+ (60 + random) +"%, #605c53 80%)";
+  $(".screen").css({"background": command});
 }
 
-/// <summary> Easter egg function: Updates display if screen is being pressed. </summary>
-$(".screen-border").mousemove(function(event) {
-  if (pressingOnScreen) {
-    ScreenPressed(event);
-  }
-}).mousedown(ScreenPressed);
-
-/// <summary> Easter egg function: clears screen pressed event if mouse is release or out of bounds. </summary>
+/**
+* Easter egg: Restores screen to normal when user stops clicking display and "screen pressed" animation finishes.
+*/
 function ReleaseScreen() {
   pressingOnScreen = false;
-  $(".screen-border").css({"background":"#605c53","cursor":"default"}); 
+  $(".screen").css({"background":"#605c53","cursor":"default"}); 
 }
 
-$(".screen-border").mouseleave(ReleaseScreen).mouseup(ReleaseScreen);
+
+$(function() {
+  $(".screen").mousemove(function(event) {
+    // Continue firing event in order to update mouse position
+    if (pressingOnScreen) {
+      ScreenPressed(event);
+    }})
+    .mousedown(ScreenPressed)
+    .mouseleave(ReleaseScreen)
+    .mouseup(ReleaseScreen);
+
+  $(".key-num").click(function() {
+    enterDigit($(this));
+  });
+
+  $(".key-op").click(function() {
+    operation($(this));
+  });
+
+  $(".key-red").click(function() {
+    clear($(this));
+  });
+}());

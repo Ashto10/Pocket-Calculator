@@ -1,59 +1,56 @@
 <html>
   <head>
+    <meta charset="UTF-8"> 
     <link href="https://fonts.googleapis.com/css?family=Share+Tech+Mono|Passion+One|Roboto+Slab" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" rel="stylesheet" type="text/css">
     <link href="style.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <div class="calculator-body">
-      <div class="calculator-head">
-        <div class="logo">CalcuTron 3000</div>
-        <div class="solar">
-          <div class="panel"></div>
-          <div class="panel"></div>
-          <div class="panel"></div>
-          <div class="panel"></div>
-          <div class="panel"></div>
+    <main class="container">
+      <div class="calculator-body">
+        <div class="head">
+          <div class="logo">CalcuTron 3000</div>
+          <div class="solar"><!--
+         --><div class="panel"></div><!--
+         --><div class="panel"></div><!--
+         --><div class="panel"></div><!--
+         --><div class="panel"></div><!--
+         --><div class="panel"></div>
+          </div>
+        </div>
+        <div class="screen-container">
+          <div class="screen">
+            <p id="output">0</p>
+            <p id="log"></p>
+          </div>
+        </div>
+        <div class="buttons">
+          <button class="key-red" id="clearAll">AC</button><!--
+       --><button class="key-red" id="clear">C</button><!--
+       --><button class="key-op" id="divide">&divide;</button><!--
+       --><button class="key-op" id="multiply">&times;</button><!--
+       --><button class="key-num">7</button><!--
+       --><button class="key-num">8</button><!--
+       --><button class="key-num">9</button><!--
+       --><button class="key-op" id="subtract">-</button><!--
+       --><button class="key-num">4</button><!--
+       --><button class="key-num">5</button><!--
+       --><button class="key-num">6</button><!--
+       --><button class="key-op" id="add">+</button>
+          <div class="short-row">
+            <button class="key-num">1</button><!--
+         --><button class="key-num">2</button><!--
+         --><button class="key-num">3</button><!--
+         --><button class="key-num" id="zero">0</button><!--
+         --><button class="key-num">.</button>
+          </div><!--
+       --><button class="key-op" id="equals">=</button>
         </div>
       </div>
-      <div class='calculator-screen'>
-        <div class="screen-border">
-          <p id='output'>0</p>
-          <p id='log'></p>
-        </div>
-      </div>
-      <div class="calculator-buttons">
-        <div class="row">
-          <button onClick='clearAll()' class='red-button'>AC</button>
-          <button onClick='clearEntry()' class='red-button'>C</button>
-          <button onclick='operation("/")'>&divide;</button>
-          <button onClick='operation("*")'>&times;</button>
-        </div>
-        <div class="row">
-          <button class='number-button'>7</button>
-          <button class='number-button'>8</button>
-          <button class='number-button'>9</button>
-          <button onClick='operation("-")'>-</button>
-        </div>
-        <div class="row">
-          <button class='number-button'>4</button>
-          <button class='number-button'>5</button>
-          <button class='number-button'>6</button>
-          <button onClick='operation("+")'>+</button>
-        </div>
-        <div class="row">
-          <button class='number-button'>1</button>
-          <button class='number-button'>2</button>
-          <button class='number-button'>3</button>
-          <button id='equals' onClick='equals()'>=</button>
-        </div>
-        <div class="row">
-          <button id='zero' class='number-button'>0</button>
-          <button class='number-button'>.</button>
-        </div>
-      </div>
-    </div>
+    </main>
   </body>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
   <script src="script.js"></script>
 </html>
